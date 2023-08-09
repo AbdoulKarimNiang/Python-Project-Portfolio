@@ -1,2 +1,2 @@
 # Python-Project-Portfolio
-This repository contain my Python Project Porfoglio
+This repository contains my Python Project Portfolio
