@@ -62,9 +62,17 @@ def ask_money() -> float:
     amount: float = 0.00
     print(f"Please insert coins")
     for coins_name in coins:
-        num_coins: float = float(input(f"How many {coins_name}?: "))
-        key_value: float = num_coins * coins[coins_name]
-        amount += key_value
+        while True:
+            num_coins_str: str = input(f"How many {coins_name}?: ")
+            if not num_coins_str.isdigit():
+                continue
+            num_coins: float = float(num_coins_str)
+            if num_coins <= 0:
+                continue
+            else:
+                key_value: float = num_coins * coins[coins_name]
+                amount += key_value
+                break
     return amount
 
 
@@ -90,13 +98,16 @@ if __name__ == '__main__':
                 print(f"profit: {profit}")
         elif order == 'Off':
             should_continue = False
+        elif order not in Flavours:
+            print("Please enter a valid beverage from the above list 👆🏾")
+            continue
         elif check_resources(order):
             money_given = ask_money()
             product_cost = Flavours[order]['price']
             if check_cost_order(order, money_given):
                 rest: float = money_given - product_cost
                 rounding: float = round(rest, 2)
-                print(f"here is ${rounding} in change")
+                print(f"Here is ${rounding} in change")
                 enough_quantity = check_resources(order)
                 if enough_quantity:
                     quantity_reduction(order)
