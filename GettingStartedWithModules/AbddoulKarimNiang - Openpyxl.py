@@ -122,4 +122,4 @@ if __name__ == '__main__':
     data_sheet['A1'].fill = color
 
     # Save
-    wb.save(r"C:\Users\karim\Downloads\TwentyExercises.xlsx")
+    wb.save(r"C:\Users\karim\Downloads\Exercises.xlsx")
