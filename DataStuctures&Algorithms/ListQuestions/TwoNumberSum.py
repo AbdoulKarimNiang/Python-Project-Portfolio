@@ -6,7 +6,7 @@ numbers = [1, 5, 8, 4, 9, 3, 18, 2]
 target = 22
 
 class Solution:
-    def twoSum(self, nums: List, target: int) -> List:
+   def twoSum(nums: List[int], target: int) -> List[int]:
         my_value_dictio = {}
         for i, num in enumerate(nums):
             compliment = target - num
