@@ -3,9 +3,9 @@ import pandas as pd
 closure = '022024'
 folder = closure[2:] + "." + closure[:2]
 
-path = "ConfidentialPath"
+path = rf"U:\Rivoli\area-amministrazione\02. CONTROLLO DI GESTIONE\STAGIONE 23-24\{folder}\MovimentiCommessa{closure}.xlsx"
 
-new_path = r"ConfidentialPath"
+new_path = rf"U:\Rivoli\area-amministrazione\kniang\Contabilità\23-24\{folder}\MovimentiCommessa{closure}LV-FV.xlsx"
 
 dtype = {
     "Competenza": 'str',
@@ -36,11 +36,13 @@ mov_comm_com_df[['Competenza', 'Data Documento', 'Data Movimento Contabile']] = 
 )
 # Changing the value of ARTICOLO for LV - FV and LA
 basic_criteria = \
-            (mov_comm_com_df['Codice Commessa'].str.contains('V0') |
-             mov_comm_com_df['Codice Commessa'].str.contains('LA')
-             )
+    (
+            mov_comm_com_df['Codice Commessa'].str.contains('-LV') |
+                    mov_comm_com_df['Codice Commessa'].str.contains('-FV') |
+                    mov_comm_com_df['Codice Commessa'].str.contains('-LA')
+    )
 
-criteria_other = ~ (basic_criteria  # tilda is used as it was a "not"
+criteria_other = (mov_comm_com_df['Tipo'] == 'Articolo') & ~ (basic_criteria  # tilda is used as it was a "not"
                     )
 criteria_LV = (
             basic_criteria
@@ -56,6 +58,9 @@ print(mov_comm_com_df.sample(5))
 mov_comm_com_df.loc[criteria_LV, 'Nr.'] = 'ACQ_LAV'
 
 # Filer LV - FV
-mov_comm_com_df = mov_comm_com_df[mov_comm_com_df['Codice Commessa'].str.contains('V0')]
+mov_comm_com_df = mov_comm_com_df[mov_comm_com_df['Codice Commessa'].str.contains('-LV|-FV')]
 
 mov_comm_com_df.to_excel(new_path, index=False, startrow=0, startcol=0)
+
+
+
