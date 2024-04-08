@@ -3,9 +3,9 @@ import pandas as pd
 closure = '022024'
 folder = closure[2:] + "." + closure[:2]
 
-path = rf"U:\Rivoli\area-amministrazione\02. CONTROLLO DI GESTIONE\STAGIONE 23-24\{folder}\MovimentiCommessa{closure}.xlsx"
+path = rf"U:\**\**-**\0**\**\{folder}\MovimentiCommessa{closure}.xlsx"
 
-new_path = rf"U:\Rivoli\area-amministrazione\kniang\Contabilità\23-24\{folder}\MovimentiCommessa{closure}LV-FV.xlsx"
+new_path = rf"U:\**\**-**\0**\**\{folder}\MovimentiCommessa{closure}LV-FV.xlsx"
 
 dtype = {
     "Competenza": 'str',
