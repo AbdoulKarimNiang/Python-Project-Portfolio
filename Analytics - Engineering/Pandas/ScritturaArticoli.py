@@ -1,7 +1,7 @@
 import pandas as pd
 
 # loading data
-file_path = r"U:\Rivoli\area-amministrazione\kniang\Contabilità\23-24\2024.02\MovimentiCommessaDDT_202402.xlsx"
+file_path = r"U:\**\**\MovimentiCommessaDDT_202402.xlsx"
 
 dtype = {
     'Competenza': 'datetime64[ms]',  # it represents only date Date
