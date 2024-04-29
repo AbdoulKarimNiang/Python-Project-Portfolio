@@ -1,13 +1,13 @@
 Here you can find a complete script about a Data Engineer Project using Polars.
 
 
-The objectives are to:
+# The objectives are to:
 
 - Use a programming language to read the data and load it to RDMS
 - Query the loaded table into 
 
 
-Skills used:
+# Skills used:
 
 - Python Programming Language
 - Polar Library
@@ -16,7 +16,7 @@ Skills used:
 - SQL (MySQL Flavour)
 
 
-The challenges/Skills faced/used:
+# The challenges/Skills faced/used:
 
 - Read the tables using Polars
 - Assign a proper schema
