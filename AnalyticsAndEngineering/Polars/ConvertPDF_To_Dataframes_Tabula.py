@@ -10,6 +10,7 @@ path = os.path.join(base_path,"Downloads", file)
 
 
 df_list = tabula.read_pdf(path, pages='1-2,4-6,8-14,16-23', stream=True,
+                          multiple_tables=True,
                           pandas_options={'header': True})
 
 def process_dataframe(df, thounsand_sperator = ".", decimal_sperator =","):
@@ -84,9 +85,18 @@ def process_dataframe(df, thounsand_sperator = ".", decimal_sperator =","):
     # Explode and filter
     df_polars = df_polars.explode("spendings","incomes")
 
-    df_polars = df_polars.filter(
-       (pl.col("spendings") + pl.col("incomes") != 0)
-   )
+    # Cast
+
+    df_polars = df_polars.with_columns(
+        date_operation = pl.col("date_operation").str.to_date(format="%d/%m/%Y"),
+        date_valuta=pl.col("date_valuta").str.to_date(format="%d/%m/%Y")
+    )
+
+    df_polars = (df_polars
+        .filter(
+           (pl.col("spendings") + pl.col("incomes") != 0)
+       ).sort(by=["date_operation", "date_valuta"], descending=False)
+    )
 
     return df_polars
 
@@ -98,4 +108,5 @@ df = reduce(lambda x, y: pl.concat([x, y]), polars_dataframes)
 
 export_path = os.path.join(os.path.expanduser("~"),"Downloads","EstrattoContoAnnualeING.xlsx")
 
-df.write_excel(workbook=export_path, worksheet="EstrattoConto", position="B2", table_name="EstrattoContoING")
+print(df)
+# df.write_excel(workbook=export_path, worksheet="EstrattoConto", position="B2", table_name="EstrattoContoING")
