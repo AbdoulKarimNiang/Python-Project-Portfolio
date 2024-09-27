@@ -12,7 +12,7 @@ path = os.path.join(base_path,"Downloads", file)
 df_list = tabula.read_pdf(path, pages='1-2,4-6,8-14,16-23', stream=True,
                           pandas_options={'header': True})
 
-def process_dataframe(df):
+def process_dataframe(df, thounsand_sperator = ".", decimal_sperator =","):
     """
     The function remove columns with only null values and
     rows with null values.
@@ -21,6 +21,8 @@ def process_dataframe(df):
     this thing.
 
     :param df: a pandas dataframe
+    :param thounsand_sperator: [str]
+    :param decimal_sperator: [str]
     :return: a polars dataframe
     """
 
@@ -52,18 +54,20 @@ def process_dataframe(df):
 
     df_polars = df_polars.filter(~pl.col("description").is_null())
 
+    # Replace thousand and decimal seperator, cast to float and round
     df_polars= df_polars.with_columns(
         spendings=pl.col("spendings")
             .cast(pl.Utf8)
-            .str.replace_all(r"\.", "")  # Remove thousands separators (periods)
-            .str.replace(",", ".")  # Replace comma with a period (decimal point)
-            .str.replace_all(r"[^\d.]", "").cast(pl.Float32),
+            .str.replace_all(fr"\{thounsand_sperator}", "")  # Remove thousands separators (periods)
+            .str.replace(f"{decimal_sperator}", f"{thounsand_sperator}")  # Replace comma with a period (decimal point)
+            .str.replace_all(r"[^\d.]", "").cast(pl.Float32).round(2),
         incomes=pl.col("incomes").cast(pl.Utf8)
             .str.replace_all(r"\.", "")  # Remove thousands separators (periods)
             .str.replace(",", ".")  # Replace comma with a period (decimal point)
-            .str.replace_all(r"[^\d.]", "").cast(pl.Float32)
+            .str.replace_all(r"[^\d.]", "").cast(pl.Float32).round(2)
     )
 
+    # Fill and grouping with description concatenation
     df_polars = df_polars.with_columns(
         pl.col("date_operation").fill_null(strategy='forward'),
         pl.col("date_valuta").fill_null(strategy='forward'),
@@ -77,35 +81,21 @@ def process_dataframe(df):
         pl.col("description").str.concat(delimiter=" ")
     )
 
-
+    # Explode and filter
     df_polars = df_polars.explode("spendings","incomes")
 
-    # Cast "spendings" and "incomes" to Float32 to allow numeric operations
-    df_polars = df_polars.with_columns(
-        pl.col("spendings").cast(pl.Float32),
-        pl.col("incomes").cast(pl.Float32)
-    )
-
-   # df_polars = df_polars.filter(
-    #    pl.col("spendings") != 0 & pl.col("incomes") != 0
-    #)
-
-
-    #df_polars = df_polars.with_columns(
-     #   date_operation=pl.col("date_operation").str.strptime(pl.Date,format="%d/%m/Y"),
-      #  date_valuta=pl.col("date_valuta").str.strptime(pl.Date,format="%d/%m/Y"),
-       # incomes=pl.col("incomes").str.extract(f"d+"),
-        #spendings=pl.col("incomes").str.extract(f"d+")
-    #)
-
-    # df_polars = df.filter(pl.col("dat"))
+    df_polars = df_polars.filter(
+       (pl.col("spendings") + pl.col("incomes") != 0)
+   )
 
     return df_polars
 
 polars_dataframes = [process_dataframe(df_list[i]) for i in range(1, len(df_list))]
 
-print(polars_dataframes)
+# print(polars_dataframes)
 
-# df = reduce(lambda x, y: pl.concat([x, y]), polars_dataframes, df)
+df = reduce(lambda x, y: pl.concat([x, y]), polars_dataframes)
 
-# print(df)
+export_path = os.path.join(os.path.expanduser("~"),"Downloads","EstrattoContoAnnualeING.xlsx")
+
+df.write_excel(workbook=export_path, worksheet="EstrattoConto", position="B2", table_name="EstrattoContoING")
