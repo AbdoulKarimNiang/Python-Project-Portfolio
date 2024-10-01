@@ -1,6 +1,9 @@
 from faker import Faker
 import polars as pl
-from random import randint
+from datetime import datetime
+
+today = datetime.today().year
+
 
 # locale is set to get Fake data specific
 # to a determined region
@@ -10,24 +13,27 @@ occurances = 10
 
 # List comprehension to create data in more efficient way
 # than classic for loops
-names = [fake.unique.name() for i in range(occurances+1)]
-addresses = [fake.address() for i in range(occurances+1)]
-cities = [fake.city() for i in range(occurances+1)]
-ages = [randint(18, 96) for i in range(occurances+1)]
-
 df_data = {
-    'name': names,
-    'age':ages,
-    'address':addresses,
-    'city':cities
+    'name': [fake.unique.first_name() for i in range(occurances+1)],
+    'surname': [fake.last_name() for i in range(occurances+1)],
+    'date_of_birth':[fake.date_of_birth() for i in range(occurances+1)],
+    'full_address':[fake.address() for i in range(occurances+1)],
+    'city':[fake.city() for i in range(occurances+1)],
+    'phone_number': [fake.phone_number() for i in range(occurances+1)]
 }
 
 df = pl.DataFrame(data= df_data)
 
 # You can use the list modules on a column if it containes
 # data of list type
+
+pl.Config(fmt_str_lengths=50)
+
 df = df.with_columns(
-    surname = pl.col("name").str.split(" ").list.last()
+    year = pl.lit(today) - pl.col('date_of_birth').dt.year(),
+    province = pl.col('full_address').str.extract( r'\(([A-Z]{2})\)'),
+    comune = pl.col('full_address').str.extract(r'\d{5},\s*(.*?)\s*\([A-Z]{2}\)'),
+    cap = pl.col("full_address").str.extract(r'(\d{5})', 0)
 )
 
 print(df)
