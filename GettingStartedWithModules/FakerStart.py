@@ -1,7 +1,7 @@
 from faker import Faker
 import polars as pl
 from datetime import datetime
-import pyarrow
+import pyarrow as pa
 from time import time
 
 start = time()
@@ -28,6 +28,8 @@ df_data = {
     'phone_number': [fake.phone_number() for i in range(occurances)],
 }
 
+
+table = pa.table(data = df_data) 
 
 df = pl.DataFrame(data= df_data)
 
