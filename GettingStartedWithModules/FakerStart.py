@@ -26,4 +26,8 @@ df = df.with_columns(
     surname = pl.col("name").str.split(" ").list.last()
 )
 
+<<<<<<< HEAD
 print(df.head())
+=======
+print(df.head())
+>>>>>>> 3205929 (Before pull)
