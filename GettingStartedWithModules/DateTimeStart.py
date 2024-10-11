@@ -112,4 +112,3 @@ print(date_july_2022.isoweekday())
 
 # Get the number of days in a specific month and year: Write a program that accepts a month and a year as input and returns the number of days in that month.
 
-# These exercises should help you practice working with the datetime modu
