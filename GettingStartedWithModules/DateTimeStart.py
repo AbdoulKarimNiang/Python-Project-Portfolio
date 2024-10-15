@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta,date
 
-
 today = datetime.today()
 
 # print(today)
@@ -93,8 +92,23 @@ print(date_july_2022.isoweekday())
 # Intermediate Exercises:
 # Find the last day of the current month: Write a program that determines the last day of the current month.
 
+def last_day_current_month(thisdate: datetime) -> datetime:
+
+    year = thisdate.year
+    month = thisdate.month +1
+    day = 1
+
+    new_date = date(year, month, day) - timedelta(1)
+
+    return new_date
+
+last_day_mounth_today = last_day_current_month(today)
+print(last_day_mounth_today)
 
 # Convert timestamp to date: Given a Unix timestamp (e.g., 1694342400), convert it to a human-readable date.
+
+date_from_timestamp = datetime.fromtimestamp(1694342400)
+print(date_from_timestamp)
 
 # Find the difference in timezones: Calculate the difference in hours between two timezones, e.g., New York (UTC-5) and Tokyo (UTC+9).
 
