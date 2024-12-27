@@ -89,8 +89,10 @@ def check_cost_order(client_order: str, amount: float) -> bool:
 
 should_continue = True
 profit = 0
+
 if __name__ == '__main__':
     while should_continue:
+        print(f"Press off to end the machine")
         order: str = input("What would you like? (espresso/latte/cappuccino)?: ").title()
         if order == 'Report':
             for key, value in Resources.items():
