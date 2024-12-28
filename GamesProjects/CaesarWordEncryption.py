@@ -38,6 +38,9 @@ while restart:
         break
 
     caesar(start_text=text, shift_amount=shift, shift_direction=direction)
-    user_input = input("Would you restart the game (Yes/No)?: ").lower()
+
+    user_input = None
+    while user_input not in ('yes', 'no'):
+        user_input = input("Would you restart the game (Yes/No)?: ").lower()
     if user_input == "no":
         break
