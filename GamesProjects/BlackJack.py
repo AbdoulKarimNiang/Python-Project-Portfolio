@@ -2,7 +2,9 @@ import random as r
 
 # creating list, variable for functions
 card_list = [11, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-ask_play = input("Do you want to play a game of BlackJack? Type 'y' or 'n' )? :  ").lower()
+ask_play = None
+while ask_play not in ('y', 'n'):
+    ask_play = input("Do you want to play a game of BlackJack? Type 'y' or 'n' )? :  ").lower()
 player_cards = []
 computer_cards = []
 scores = {}
