@@ -6,7 +6,7 @@ def get_number(value: None|str, name: str)-> int:
         except ValueError as e:
             print(e)
             print("Insert a valid number")
-        return value
+    return value
 
 def less_common_multiple(x: int, y: int):
     greater = max(x, y)
